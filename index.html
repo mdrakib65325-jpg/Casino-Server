@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101010"><title>Casino Server</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--gold:#f4c542;--bg:#101010;--panel:#1b1b1b;--muted:#b8b8b8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#29200a,#101010 48%);color:#fff;font-family:system-ui,"Noto Sans Bengali",sans-serif}
+header{padding:22px 16px;text-align:center;border-bottom:1px solid #594719;background:#111c}
+.logo{font-size:30px;font-weight:900;letter-spacing:1px;color:var(--gold);text-shadow:0 2px 15px #8a6500}
+.sub{color:#ddd;font-size:13px;margin-top:5px}.wrap{max-width:900px;margin:auto;padding:18px}
+.balance{background:linear-gradient(135deg,#302407,#171717);border:1px solid #8d6c19;border-radius:18px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.balance small{color:#ddd}.coins{font-size:28px;font-weight:800;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:18px}
+.card{background:linear-gradient(160deg,#242424,#171717);border:1px solid #49402a;border-radius:16px;padding:18px}
+h2{font-size:19px;color:var(--gold);margin:0 0 10px}
+p{color:#d0d0d0;line-height:1.55}.game-icon{font-size:38px}
+button{background:linear-gradient(135deg,#f8d96a,#b98512);border:0;border-radius:10px;padding:11px 16px;font-weight:800;color:#171000;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}.result{font-size:23px;min-height:35px;color:var(--gold);font-weight:800;margin:12px 0}
+input{width:100%;padding:11px;border-radius:9px;border:1px solid #5a4a25;background:#101010;color:white;margin:6px 0 12px}
+.notice{border-left:4px solid var(--gold);padding:10px 12px;background:#211c0e;border-radius:7px;color:#eee;font-size:13px;margin-top:16px}
+footer{text-align:center;color:#888;padding:25px 10px;font-size:12px}
+.hidden{display:none}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+</style></head>
+<body>
+<header><div class="logo">🎰 CASINO SERVER</div><div class="sub">PLAY • ENJOY • VIRTUAL COINS</div></header>
+<main class="wrap">
+<section class="balance"><div><small>আপনার ভার্চুয়াল কয়েন</small><div class="coins" id="balance">🪙 1000</div></div><button onclick="dailyBonus()">দৈনিক বোনাস +১০০</button></section>
+<div class="grid">
+<section class="card"><div class="game-icon">🎰</div><h2>Lucky Slots</h2><p>১০০ কয়েন খরচ করে স্লট ঘোরান। মিল পেলে ভার্চুয়াল কয়েন জিতুন।</p><div class="result" id="slotResult">🍒 🍋 ⭐</div><button onclick="spin()">স্পিন করুন (১০০ কয়েন)</button></section>
+<section class="card"><div class="game-icon">🎲</div><h2>Dice Roll</h2><p>৫০ কয়েন খরচ করে পাশা ফেলুন। ৪, ৫ বা ৬ এলে ১০০ কয়েন ফেরত পাবেন।</p><div class="result" id="diceResult">⚄</div><button onclick="rollDice()">পাশা ফেলুন (৫০ কয়েন)</button></section>
+<section class="card"><div class="game-icon">🏆</div><h2>আপনার হিসাব</h2><p>এই ডিভাইসে সংরক্ষিত ভার্চুয়াল গেমের হিসাব।</p><div>মোট খেলা: <b id="plays">0</b></div><div>জয়: <b id="wins">0</b></div><div>হার: <b id="losses">0</b></div><p><button onclick="resetGame()">ডেমো রিসেট</button></p></section>
+</div>
+<section class="card" style="margin-top:16px"><h2>ℹ️ Casino Server সম্পর্কে</h2><p>এটি বিনোদনের জন্য একটি ডেমো ভার্চুয়াল-কয়েন গেম। কয়েনের কোনো নগদ মূল্য নেই; জমা, উত্তোলন, বাজি বা বাস্তব অর্থের লেনদেনের ব্যবস্থা নেই।</p></section>
+<div class="notice">নিরাপদ ব্যবহার: এখানে শুধু বিনামূল্যের ভার্চুয়াল কয়েন ব্যবহার হয়। বাস্তব টাকার জুয়া বা অর্থ জমা দেওয়ার সুবিধা নেই।</div>
+</main><footer>© 2026 Casino Server • Virtual play only</footer>
+<script>
+let state=JSON.parse(localStorage.getItem('cs-demo')||'{"balance":1000,"plays":0,"wins":0,"losses":0,"bonus":false}');
+function save(){localStorage.setItem('cs-demo',JSON.stringify(state));render()}
+function render(){document.getElementById('balance').textContent='🪙 '+state.balance;document.getElementById('plays').textContent=state.plays;document.getElementById('wins').textContent=state.wins;document.getElementById('losses').textContent=state.losses}
+function dailyBonus(){if(state.bonus){alert('আজকের বোনাস নেওয়া হয়েছে।');return}state.balance+=100;state.bonus=true;save();alert('১০০ ভার্চুয়াল কয়েন যোগ হয়েছে!')}
+function spin(){if(state.balance<100){alert('পর্যাপ্ত ভার্চুয়াল কয়েন নেই।');return}state.balance-=100;state.plays++;let a=['🍒','🍋','⭐','🔔','💎'];let x=[0,0,0].map(()=>a[Math.floor(Math.random()*a.length)]);document.getElementById('slotResult').textContent=x.join(' ');if(x[0]===x[1]&&x[1]===x[2]){state.balance+=500;state.wins++;alert('অভিনন্দন! ৫০০ ভার্চুয়াল কয়েন জিতেছেন।')}else if(x[0]===x[1]||x[1]===x[2]||x[0]===x[2]){state.balance+=150;state.wins++;alert('আপনি ১৫০ ভার্চুয়াল কয়েন পেয়েছেন।')}else state.losses++;save()}
+function rollDice(){if(state.balance<50){alert('পর্যাপ্ত ভার্চুয়াল কয়েন নেই।');return}state.balance-=50;state.plays++;let n=1+Math.floor(Math.random()*6);document.getElementById('diceResult').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][n-1]+' ('+n+')';if(n>=4){state.balance+=100;state.wins++;alert('জিতেছেন! ১০০ ভার্চুয়াল কয়েন পেয়েছেন।')}else{state.losses++;alert('আবার চেষ্টা করুন!')}save()}
+function resetGame(){if(confirm('সব ডেমো হিসাব রিসেট করবেন?')){state={balance:1000,plays:0,wins:0,losses:0,bonus:false};save()}}
+render();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
